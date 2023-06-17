@@ -1,0 +1,23 @@
+[gd_scene load_steps=6 format=3 uid="uid://fuir7ttnsona"]
+
+[ext_resource type="Shader" path="res://shaders/rings.gdshader" id="1_bgxox"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_75wv4"]
+noise_type = 0
+fractal_lacunarity = 5.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_2m77j"]
+width = 1000
+height = 1
+noise = SubResource("FastNoiseLite_75wv4")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ii0kb"]
+render_priority = 0
+shader = ExtResource("1_bgxox")
+shader_parameter/RING_NOISE = SubResource("NoiseTexture2D_2m77j")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5ibj4"]
+material = SubResource("ShaderMaterial_ii0kb")
+
+[node name="MeshInstance3D" type="MeshInstance3D"]
+mesh = SubResource("PlaneMesh_5ibj4")

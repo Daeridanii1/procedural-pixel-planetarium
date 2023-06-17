@@ -1,0 +1,93 @@
+{
+    "names": [
+        "Alpha",
+        "Beta",
+        "Gamma",
+        "Delta",
+        "Epsilon",
+        "Zeta",
+        "Eta",
+        "Theta",
+        "Kappa",
+        "Lambda",
+        "Mu",
+        "Nu",
+        "Xi",
+        "Omicron",
+        "Pi",
+        "Rho",
+        "Sigma",
+        "Tau",
+        "Upsilon",
+        "Phi",
+        "Chi",
+        "Psi",
+        "Omega"
+    ],
+    "numbers": [
+        "I",
+        "II",
+        "III",
+        "IV",
+        "V",
+        "VI",
+        "VII",
+        "VIII",
+        "IX",
+        "X",
+        "XI",
+        "XII"
+    ],
+    "v_hot": [
+        "scorching",
+        "flaming",
+        "scorched",
+        "burning",
+        "boiling",
+        "blistering",
+        "searing",
+		"fiery"
+    ],
+    "hot": [
+        "hot",
+        "warm",
+        "balmy",
+        "summery",
+		"tropic",
+		"sweltry"
+    ],
+	"hot_terra": [
+		"arid"
+	],
+    "temperate": [
+        "temperate",
+        "gentle",
+        "seasonal",
+        "fair"
+    ],
+    "temperate_terra": [
+        "humid",
+        "wet",
+        "earthlike",
+		"habitable",
+		"comfortable"
+    ],
+    "cold": [
+        "cold",
+        "chilly",
+        "wintry",
+        "cool",
+        "frosted",
+		"cool"
+    ],
+    "v_cold": [
+        "rime-touched",
+        "frozen",
+        "ice-bound",
+        "freezing",
+        "frigid",
+		"very cold",
+		"rimy",
+		"hyperborean"
+    ]
+}

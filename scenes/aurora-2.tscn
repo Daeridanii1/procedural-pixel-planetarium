@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://c2lr2ukegjduf"]
+
+[ext_resource type="Shader" path="res://shaders/shadow.gdshader" id="1_pcu3e"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xv2na"]
+render_priority = 0
+shader = ExtResource("1_pcu3e")
+shader_parameter/light_vector = Vector3(1, 0.229, 0)
+
+[node name="CSGSphere3D" type="CSGSphere3D"]
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 0, 0, 0)
+radial_segments = 32
+rings = 12
+material = SubResource("ShaderMaterial_xv2na")

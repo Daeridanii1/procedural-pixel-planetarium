@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://o3j1rre5gcji"]
+
+[ext_resource type="Shader" path="res://shaders/cloud.gdshader" id="1_n6qvt"]
+[ext_resource type="Script" path="res://scripts/snap_to_unit_sphere.gd" id="2_v7nuw"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tc8r4"]
+render_priority = 0
+shader = ExtResource("1_n6qvt")
+shader_parameter/color = Color(1, 1, 1, 1)
+shader_parameter/shadow_color = Color(0.5, 0.5, 0.5, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7edx5"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[node name="CSGSphere3D" type="CSGSphere3D"]
+material = SubResource("ShaderMaterial_tc8r4")
+
+[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="."]
+script = ExtResource("2_v7nuw")
+cloud_mesh = SubResource("BoxMesh_7edx5")

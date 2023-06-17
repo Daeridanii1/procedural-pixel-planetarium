@@ -1,0 +1,64 @@
+{
+    "gas_giant_1": [
+        "The skies here seem full of wonder, illuminated from above.",
+		"Aurorae the size of whole planets dance against the sky.",
+		"The eddies and currents of gas in the atmosphere form invisible rivers.",
+        "A thousand miles of clouds lie like blankets on top of each other.",
+        "The clouds here shimmer like metal in the sun.",
+        "The breeze here is scouring to the sol, stripping away deception.",
+        "The wind here roars coolly like the breathing of a gigantic beast.",
+        "The air might be breathable here, despite its off-putting color.",
+        "The atmosphere goes from gas to liquid closer to the core.",
+        "Storms rage here that could swallow a planet whole.",
+        "The winds whip up filaments of glass from below that can pierce metal.",
+        "It is not clear if the sky here is liquid or gas.",
+        "Very little sunlight filters through the clouds here.",
+        "The clouds here are dense and suffocating.",
+        "The stars here are rapidly swallowed up by the atmosphere's haze.",
+		"Roiling rivers of atmosphere twist around each other.",
+		"You wonder if this planet has a solid core, or if it is just gas all the way down."
+    ],
+    "gas_giant_life_1": [
+        "Living gasbags float in the convection currents of the upper atmosphere.",
+        "An abandoned float-station hovers in the deep layers of the atmosphere, slowly being crushed.",
+        "Glowing insect-creatures light up the night skies, suspended in gas.",
+        "You get the sense that there are large creatures here, hidden in the clouds.",
+		"Enormous spires, miles high, emerge from deeper in the atmosphere.",
+		"Simple green organisms float at the very top of the atmosphere, soaking up the sun.",
+		"The deepest parts of the clouds harbor a species of titanic creatures with immensely long legs."
+    ],
+    "selena_1": [
+        "You could see the whole starscape from the surface here.",
+        "The rocks on the surface are pockmarked by micro-meteor strikes.",
+        "A large crater gathers fine dust that glimmers in the sunlight.",
+        "The beauty here is austere rather than adorned; that of rocks and dust illuminated by the sun.",
+        "The silence is gentle but inescapable; there is no sound here whatsoever.",
+        "Bright ejecta highlight jagged ridges on the planet's surface.",
+        "The rocks on the surface are suprisingly light for their size.",
+		"Razor-sharp stones cover the planet's surface, polished by cosmic rays.",
+        "Burnt-out volcanoes show signs of a more active past.",
+        "Once-hot rivers of lava have cooled to form melted rock formations."
+    ],
+    "terra_1": [
+        "The oceans here give way gently to sandy beaches and rocky cliffs.",
+        "The clouds here dance overhead, suggesting fanciful shapes to the viewer.",
+        "The starry sky revolves over a dried and dusty riverbed.",
+        "This place seems familiar, though you cannot quite place it.",
+        "A distant range of mountains is larger than it first appears.",
+        "The eroded furrows on the surface are like breaking waves in sand.",
+        "The shadows of clouds process over a distorted landscape.",
+        "Ocean waves lap on a rock beach, slowly eroding it out to sea.",
+		"Rocky badlands display evidence of tectonic activity.",
+		"A cluster of small craters are slowly eroding."
+    ],
+    "terra_life_1": [
+        "There is a race of long-limbed people here who speak a strange language that sounds like breaking glass.",
+        "Worms writhe in the soil; enough that it might be an earthquake.",
+        "Short creatures dwell underground, burrowing unseen.",
+        "The people here make praise to a burning deity.",
+        "The people here claim to be human, but are not.",
+        "A six-winged bird is silhouetted against the sun like a harbinger.",
+        "The life here seems twisted in a way you cannot precisely describe.",
+        "The people here are kind but cannot speak, and their eyes reveal a latent fear."
+    ]
+}
