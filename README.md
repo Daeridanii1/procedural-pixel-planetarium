@@ -1,3 +1,3 @@
 *Procedural Pixel Planetarium!*
 
-Press H to generate a new planet.
+Press [Space] to generate a new planet.

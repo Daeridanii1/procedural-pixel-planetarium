@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://dh2f3vfuo11jo"]
+[gd_scene load_steps=37 format=3 uid="uid://dh2f3vfuo11jo"]
 
 [ext_resource type="Shader" path="res://shaders/planet.gdshader" id="1_enfj3"]
 [ext_resource type="Script" path="res://scripts/Planet.gd" id="2_5ebrv"]
@@ -9,6 +9,10 @@
 [ext_resource type="Texture2D" uid="uid://c8acoybkbrvua" path="res://images/circle.png" id="7_rilla"]
 [ext_resource type="Script" path="res://scripts/atmosphere.gd" id="8_sv2if"]
 [ext_resource type="FontFile" uid="uid://ba8w4fc43u8cc" path="res://fonts/CozetteVector.ttf" id="9_w6cy7"]
+[ext_resource type="AudioStream" uid="uid://egust00f3brg" path="res://sounds/protean-space.wav" id="11_bah0r"]
+[ext_resource type="Shader" path="res://shaders/background.gdshader" id="11_c4juc"]
+[ext_resource type="Script" path="res://scripts/planet_label.gd" id="11_gkxdt"]
+[ext_resource type="Script" path="res://scripts/music.gd" id="12_4xtgk"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_omhmq"]
 frequency = 0.004
@@ -72,43 +76,33 @@ height = 0.06
 radial_segments = 6
 rings = 6
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_lin4d"]
-emission_shape = 2
-emission_sphere_radius = 0.6
-direction = Vector3(0, 0, 0)
-gravity = Vector3(0, 0, 0)
-scale_min = 0.6
-scale_max = 1.1
-sub_emitter_keep_velocity = true
+[sub_resource type="Gradient" id="Gradient_evxpj"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.958333)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_o4xao"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_mjtbh"]
+noise_type = 2
+frequency = 0.04
+fractal_type = 0
+cellular_jitter = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_w1qa2"]
+width = 640
+height = 360
+invert = true
+color_ramp = SubResource("Gradient_evxpj")
+noise = SubResource("FastNoiseLite_mjtbh")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iy2pg"]
 render_priority = 0
-shader = ExtResource("4_u35ah")
-shader_parameter/color = Color(0.94902, 0.886275, 0.823529, 1)
-shader_parameter/shadow_color = Color(0.901961, 0, 0.498039, 1)
+shader = ExtResource("11_c4juc")
+shader_parameter/background_color = Color(0.0235294, 0.027451, 0.101961, 1)
+shader_parameter/star_color = Color(0.290196, 0.301961, 0.470588, 1)
+shader_parameter/NOISE_PATTERN = SubResource("NoiseTexture2D_w1qa2")
 
-[sub_resource type="SphereMesh" id="SphereMesh_fwd2b"]
-material = SubResource("ShaderMaterial_o4xao")
-radius = 0.05
-height = 0.1
-radial_segments = 6
-rings = 6
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_i2pyb"]
-emission_shape = 3
-emission_box_extents = Vector3(5, 5, 0)
-gravity = Vector3(0, 0, 0)
-scale_min = 0.1
-scale_max = 0.5
-hue_variation_min = 1.0
-hue_variation_max = 1.0
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y1ptq"]
-shading_mode = 0
-
-[sub_resource type="QuadMesh" id="QuadMesh_a3pyy"]
-material = SubResource("StandardMaterial3D_y1ptq")
-size = Vector2(0.05, 0.05)
+[sub_resource type="QuadMesh" id="QuadMesh_iccoe"]
+material = SubResource("ShaderMaterial_iy2pg")
+size = Vector2(5.4, 3)
 
 [sub_resource type="Environment" id="Environment_3psnj"]
 background_mode = 1
@@ -130,6 +124,29 @@ default_font_size = 36
 /fonts/font = ExtResource("9_w6cy7")
 /styles/style = SubResource("StyleBoxEmpty_0vd8a")
 
+[sub_resource type="Gradient" id="Gradient_fklla"]
+offsets = PackedFloat32Array(0.8, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_wpn0b"]
+noise_type = 2
+fractal_type = 0
+cellular_jitter = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_uscou"]
+width = 1600
+height = 900
+invert = true
+in_3d_space = true
+color_ramp = SubResource("Gradient_fklla")
+noise = SubResource("FastNoiseLite_wpn0b")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mc8fc"]
+render_priority = 0
+shader = ExtResource("11_c4juc")
+shader_parameter/background_color = Color(0, 0, 0, 1)
+shader_parameter/star_color = Color(1, 1, 1, 1)
+shader_parameter/NOISE_PATTERN = SubResource("NoiseTexture2D_uscou")
+
 [node name="Space" type="Node3D"]
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
@@ -140,6 +157,7 @@ stretch = true
 stretch_shrink = 6
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
 handle_input_locally = false
 size = Vector2i(320, 180)
 size_2d_override = Vector2i(1920, 1080)
@@ -147,7 +165,8 @@ size_2d_override_stretch = true
 render_target_update_mode = 4
 
 [node name="Main Camera" type="Camera3D" parent="SubViewportContainer/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.02116, 0, 1.41082)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.411)
+h_offset = 1.0
 projection = 1
 current = true
 fov = 51.4
@@ -167,24 +186,13 @@ clouds = NodePath("pclouds")
 atmosphere = NodePath("../atmosphere")
 aurora = NodePath("aurora")
 pring = NodePath("rings")
-label = NodePath("../../../Control/RichTextLabel")
+label = NodePath("../../../UI Root/planet label")
 
 [node name="pclouds" type="MultiMeshInstance3D" parent="SubViewportContainer/SubViewport/planet"]
 transform = Transform3D(0.984808, -0.172987, -0.0151344, 0.173648, 0.981061, 0.0858316, 3.72529e-09, -0.0871557, 0.996194, 0, 0, 0)
 multimesh = SubResource("MultiMesh_j8iyf")
 script = ExtResource("3_lhyyd")
 cloud_mesh = SubResource("SphereMesh_nrtcf")
-
-[node name="clouds" type="GPUParticles3D" parent="SubViewportContainer/SubViewport/planet"]
-visible = false
-cast_shadow = 0
-amount = 64
-lifetime = 10000.0
-one_shot = true
-explosiveness = 1.0
-local_coords = true
-process_material = SubResource("ParticleProcessMaterial_lin4d")
-draw_pass_1 = SubResource("SphereMesh_fwd2b")
 
 [node name="aurora" parent="SubViewportContainer/SubViewport/planet" instance=ExtResource("5_lo6yj")]
 transform = Transform3D(0.95, 0, 0, 0, 0.95, 0, 0, 0, 0.95, 0, 0, 0)
@@ -207,13 +215,9 @@ cast_shadow = 0
 modulate = Color(0, 1, 1, 0.211765)
 texture = ExtResource("7_rilla")
 
-[node name="starfield" type="GPUParticles3D" parent="SubViewportContainer/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.99768)
-amount = 1000
-lifetime = 10000.0
-explosiveness = 1.0
-process_material = SubResource("ParticleProcessMaterial_i2pyb")
-draw_pass_1 = SubResource("QuadMesh_a3pyy")
+[node name="background" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -4.422)
+mesh = SubResource("QuadMesh_iccoe")
 
 [node name="Environment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_3psnj")
@@ -223,13 +227,13 @@ transform = Transform3D(0.523775, 0.384408, -0.760191, -0.218101, 0.923163, 0.31
 shadow_enabled = true
 directional_shadow_mode = 0
 
-[node name="Control" type="Control" parent="."]
+[node name="UI Root" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Control"]
+[node name="planet label" type="RichTextLabel" parent="UI Root"]
 layout_mode = 0
 offset_left = 992.0
 offset_top = 336.0
@@ -244,3 +248,16 @@ text = "name
 [color=3AAED8]flavor text[/color]"
 fit_content = true
 scroll_active = false
+script = ExtResource("11_gkxdt")
+
+[node name="music" type="AudioStreamPlayer2D" parent="UI Root"]
+stream = ExtResource("11_bah0r")
+autoplay = true
+script = ExtResource("12_4xtgk")
+
+[node name="ColorRect" type="ColorRect" parent="UI Root"]
+z_index = -1
+material = SubResource("ShaderMaterial_mc8fc")
+offset_left = 3.0
+offset_right = 343.0
+offset_bottom = 200.0

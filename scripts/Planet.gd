@@ -6,14 +6,13 @@ extends CSGSphere3D
 @export var craters_tex : NoiseTexture2D
 @export var stripes_tex : NoiseTexture2D
 @export var clouds : Node3D
-@export var atmosphere : Node3D
+@export var atmosphere : Sprite3D
 @export var aurora : Node3D
 @export var pring : Node3D
-
 @export var label : RichTextLabel
 
-var base_noise: FastNoiseLite
-var craters: FastNoiseLite
+var base_noise: FastNoiseLite = FastNoiseLite.new()
+var craters: FastNoiseLite = FastNoiseLite.new()
 
 var is_gas_giant = false
 var type
@@ -24,29 +23,39 @@ enum ATMO {NONE, TENUOUS, AVERAGE, THICK}
 enum TEMP {VERY_HOT, HOT, TEMPERATE, COLD, VERY_COLD}
 enum PTYPE {SELENA, TERRA, GAS_GIANT}
 
+const THIRTYTWOLIMIT = 4294967295
+
 var namesfile_data
 var flavorfile_data
 
 var rng = RandomNumberGenerator.new()
+var colorutils = ColorUtils.new()
 
 func _ready():
 	rng.seed = 0
-	base_noise = FastNoiseLite.new()
-	craters = FastNoiseLite.new()
 	load_namesfile()
 	load_flavorfile()
-	generate()
+	generate(0)
 	generate_text()
-	
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+
 func _process(delta):
 	rotate(Vector3(0.0, 1.0, 0.0), rotation_speed * delta)
 	if Input.is_action_just_pressed("generate"):
-		rng.seed = rng.randi()
 		generate()
 		generate_text()
+	if Input.is_action_pressed("left"):
+		rotate(Vector3(0.0, 1.0, 0.0), rotation_speed * delta * 10.)
+	if Input.is_action_pressed("right"):
+		rotate(Vector3(0.0, 1.0, 0.0), rotation_speed * delta * -10.)
 
-func generate():
+func generate(seed: int = -1, planet_type: int = -1, planet_temp: int = -1):
+	if seed == -1:
+		rng.seed = rng.randi()
+	elif seed < -1:
+		rng.seed = abs(seed)
+	else:
+		rng.seed = seed
+
 	if rng.randf() < 0.05:
 		ring = true
 		pring.visible = true
@@ -118,11 +127,11 @@ func generate_selena():
 	clouds.visible = false
 	atmosphere.visible = false
 	aurora.visible = false
-	set_instance_shader_parameter("color0", random_white(0.0, 0.1))
-	set_instance_shader_parameter("color1", random_white(0.0, 0.15))
-	set_instance_shader_parameter("color1", random_white(0.0, 0.25))
-	set_instance_shader_parameter("color1", random_white(0.0, 0.5))
-	set_instance_shader_parameter("color1", random_white(0.0, 1.0))
+	set_instance_shader_parameter("color0", colorutils.random_white(rng, 0.0, 0.1))
+	set_instance_shader_parameter("color1", colorutils.random_white(rng, 0.0, 0.15))
+	set_instance_shader_parameter("color1", colorutils.random_white(rng, 0.0, 0.25))
+	set_instance_shader_parameter("color1", colorutils.random_white(rng, 0.0, 0.5))
+	set_instance_shader_parameter("color1", colorutils.random_white(rng, 0.0, 1.0))
 	set_instance_shader_parameter("noise_mult", randf_range(0.2, 0.6))
 	set_instance_shader_parameter("crater_mult", randf_range(0.8, 2.0))
 	set_instance_shader_parameter("poles_mult", 0.0)
@@ -133,38 +142,27 @@ func generate_terra(temperature : int = 2):
 	clouds.visible = true
 	atmosphere.visible = true
 	aurora.visible = true
-	set_instance_shader_parameter("color0", random_blue(2.0, 0.5))
-	set_instance_shader_parameter("color1", random_blue(1.0, 1.2))
-	set_instance_shader_parameter("color2", random_green())
-	set_instance_shader_parameter("color3", random_green())
-	set_instance_shader_parameter("color4", random_white())
+	set_instance_shader_parameter("color0", colorutils.random_blue(rng, 2.0, 0.5))
+	set_instance_shader_parameter("color1", colorutils.random_blue(rng, 1.0, 1.2))
+	set_instance_shader_parameter("color2", colorutils.random_green(rng))
+	set_instance_shader_parameter("color3", colorutils.random_green(rng))
+	set_instance_shader_parameter("color4", colorutils.random_white(rng))
 	match temperature:
 		TEMP.VERY_HOT, TEMP.HOT:
-			set_instance_shader_parameter("color0", random_red(2.0, 0.5))
-			set_instance_shader_parameter("color1", random_red(1.0, 1.2))
-			set_instance_shader_parameter("color2", random_red())
-			set_instance_shader_parameter("color3", random_red())
-			set_instance_shader_parameter("color4", random_red())
+			set_instance_shader_parameter("color0", colorutils.random_red(rng, 2.0, 0.5))
+			set_instance_shader_parameter("color1", colorutils.random_red(rng, 1.0, 1.2))
+			set_instance_shader_parameter("color2", colorutils.random_red(rng))
+			set_instance_shader_parameter("color3", colorutils.random_red(rng))
+			set_instance_shader_parameter("color4", colorutils.random_red(rng))
 			set_instance_shader_parameter("poles_mult", 0.0)
 		TEMP.COLD:
 			set_instance_shader_parameter("poles_mult", 2.0)
 		TEMP.VERY_COLD:
-			set_instance_shader_parameter("color0", random_white(2.0, 0.5))
-			set_instance_shader_parameter("color1", random_white(1.0, 1.2))
-			set_instance_shader_parameter("color2", random_white())
-			set_instance_shader_parameter("color3", random_white())
+			set_instance_shader_parameter("color0", colorutils.random_white(rng, 2.0, 0.5))
+			set_instance_shader_parameter("color1", colorutils.random_white(rng, 1.0, 1.2))
+			set_instance_shader_parameter("color2", colorutils.random_white(rng))
+			set_instance_shader_parameter("color3", colorutils.random_white(rng))
 			set_instance_shader_parameter("poles_mult", 5.0)
-	set_instance_shader_parameter("noise_mult", rng.randf_range(0.2, 2.0))
-	set_instance_shader_parameter("crater_mult", rng.randf_range(0.2, 2.0))
-	material.set_shader_parameter("NOISE_PATTERN", base_noise_tex)
-	material.set_shader_parameter("VORONOI_PATTERN", craters_tex)
-
-func generate_hot_terra():
-	clouds.visible = true
-	atmosphere.visible = true
-	aurora.visible = true
-
-
 	set_instance_shader_parameter("noise_mult", rng.randf_range(0.2, 2.0))
 	set_instance_shader_parameter("crater_mult", rng.randf_range(0.2, 2.0))
 	material.set_shader_parameter("NOISE_PATTERN", base_noise_tex)
@@ -174,12 +172,12 @@ func generate_gg():
 	clouds.visible = false
 	atmosphere.visible = true
 	aurora.visible = true
-	var c = random_color(true)
+	var c = colorutils.random_color(rng, true)
 	set_instance_shader_parameter("color0", c)
-	set_instance_shader_parameter("color1", mutate_color(c, .1, .1, .1))
-	set_instance_shader_parameter("color2", mutate_color(c, .2, .2, .2))
-	set_instance_shader_parameter("color3", mutate_color(c, .3, .3, .3))
-	set_instance_shader_parameter("color4", mutate_color(c, .4, .4, .4))
+	set_instance_shader_parameter("color1", colorutils.mutate_color(rng, c, .1, .1, .1))
+	set_instance_shader_parameter("color2", colorutils.mutate_color(rng, c, .2, .2, .2))
+	set_instance_shader_parameter("color3", colorutils.mutate_color(rng, c, .3, .3, .3))
+	set_instance_shader_parameter("color4", colorutils.mutate_color(rng, c, .4, .4, .4))
 	set_instance_shader_parameter("noise_mult", rng.randf_range(0.2, 2.0))
 	set_instance_shader_parameter("crater_mult", 0.0)
 	set_instance_shader_parameter("poles_mult", 0.0)
@@ -309,40 +307,4 @@ func randomize_noise():
 	base_noise_tex.noise = base_noise
 	craters_tex.noise = craters
 	stripes_tex.noise = base_noise
-
-func random_color(normalized: bool = false):
-	var r = pow(rng.randf(), 3.0)
-	var g = pow(rng.randf(), 3.0)
-	var b = pow(rng.randf(), 3.0)
-	if normalized:
-		return Vector4(r, g, b, 1.0).normalized()
-	else:
-		return Vector4(r, g, b, 1.0)
-
-func random_red(variance: float = 2.0, brightness: float = 1.0):
-	var r = rng.randf_range(0.2, 1.0) * brightness
-	var g = pow(rng.randf_range(0.0, 0.5) * brightness, variance)
-	var b = pow(rng.randf_range(0.0, 0.5) * brightness, variance)
-	return Vector4(r, g, b, 1.0)
-
-func random_green(variance: float = 2.0, brightness: float = 1.0):
-	var r = pow(rng.randf_range(0.0, 0.5) * brightness, variance)
-	var g = rng.randf_range(0.2, 1.0) * brightness
-	var b = pow(rng.randf_range(0.0, 0.5) * brightness, variance)
-	return Vector4(r, g, b, 1.0)
-
-func random_blue(variance: float = 2.0, brightness: float = 1.0):
-	var r = pow(rng.randf_range(0.0, 0.5) * brightness, variance)
-	var g = pow(rng.randf_range(0.0, 0.5) * brightness, variance)
-	var b = rng.randf_range(0.2, 1.0) * brightness
-	return Vector4(r, g, b, 1.0)
-
-func random_white(variance: float = 2.0, brightness: float = 1.0):
-	var r = clamp(rng.randf_range(0.6, 1.0) * brightness, 0., 1.)
-	var g = r# + (randf_range(0.1, 0.2) * variance)
-	var b = r #+ (randf_range(0.1, 0.2) * variance)
-	return Vector4(r, g, b, 1.0)
-
-func mutate_color(color: Vector4, r: float, g: float, b: float):
-	return Vector4(color.x + rng.randf_range(-r, r), color.y + rng.randf_range(-g, g), color.z + rng.randf_range(-b, b), 1.0)
 
