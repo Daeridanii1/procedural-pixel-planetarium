@@ -1,6 +1,7 @@
-[gd_scene load_steps=37 format=3 uid="uid://dh2f3vfuo11jo"]
+[gd_scene load_steps=36 format=3 uid="uid://dh2f3vfuo11jo"]
 
 [ext_resource type="Shader" path="res://shaders/planet.gdshader" id="1_enfj3"]
+[ext_resource type="Script" path="res://scenes/root.gd" id="1_v4qvo"]
 [ext_resource type="Script" path="res://scripts/Planet.gd" id="2_5ebrv"]
 [ext_resource type="Script" path="res://scripts/clouds.gd" id="3_lhyyd"]
 [ext_resource type="Shader" path="res://shaders/cloud.gdshader" id="4_u35ah"]
@@ -13,6 +14,8 @@
 [ext_resource type="Shader" path="res://shaders/background.gdshader" id="11_c4juc"]
 [ext_resource type="Script" path="res://scripts/planet_label.gd" id="11_gkxdt"]
 [ext_resource type="Script" path="res://scripts/music.gd" id="12_4xtgk"]
+[ext_resource type="Script" path="res://scripts/help-panel.gd" id="12_m3yun"]
+[ext_resource type="Script" path="res://scenes/seed-input.gd" id="13_jqakc"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_omhmq"]
 frequency = 0.004
@@ -124,30 +127,8 @@ default_font_size = 36
 /fonts/font = ExtResource("9_w6cy7")
 /styles/style = SubResource("StyleBoxEmpty_0vd8a")
 
-[sub_resource type="Gradient" id="Gradient_fklla"]
-offsets = PackedFloat32Array(0.8, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_wpn0b"]
-noise_type = 2
-fractal_type = 0
-cellular_jitter = 1.0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_uscou"]
-width = 1600
-height = 900
-invert = true
-in_3d_space = true
-color_ramp = SubResource("Gradient_fklla")
-noise = SubResource("FastNoiseLite_wpn0b")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_mc8fc"]
-render_priority = 0
-shader = ExtResource("11_c4juc")
-shader_parameter/background_color = Color(0, 0, 0, 1)
-shader_parameter/star_color = Color(1, 1, 1, 1)
-shader_parameter/NOISE_PATTERN = SubResource("NoiseTexture2D_uscou")
-
 [node name="Space" type="Node3D"]
+script = ExtResource("1_v4qvo")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
 texture_filter = 1
@@ -250,14 +231,55 @@ fit_content = true
 scroll_active = false
 script = ExtResource("11_gkxdt")
 
+[node name="seed input" type="RichTextLabel" parent="UI Root" node_paths=PackedStringArray("planet")]
+layout_mode = 0
+offset_left = 262.0
+offset_top = 994.0
+offset_right = 1688.0
+offset_bottom = 1049.0
+theme = SubResource("Theme_yqv0l")
+bbcode_enabled = true
+text = "[center][color=ffeedd]*[/color][/center]"
+fit_content = true
+scroll_active = false
+script = ExtResource("13_jqakc")
+planet = NodePath("../../SubViewportContainer/SubViewport/planet")
+
+[node name="help panel" type="RichTextLabel" parent="UI Root"]
+layout_mode = 0
+offset_left = 262.0
+offset_top = 116.0
+offset_right = 1688.0
+offset_bottom = 920.0
+theme = SubResource("Theme_yqv0l")
+bbcode_enabled = true
+text = "[center][color=777DA7][color=ffeedd]Welcome to the Procedural Pixel Planetarium![/color]
+This is an unfinished build missing many useful features, including a proper UI, hence this panel. Think something should be improved? Let me know![/color]
+[color=B3B3B3]——————————
+[color=777DA7][Space][/color]: Generate New Random Planet
+[color=777DA7]['][/color]: Toggle seed input mode (Generate a planet from its 0-9, A-Z seed)
+[color=777DA7][Enter][/color]: Exit seed input mode, generating that planet
+[color=777DA7][Left Arrow] and [Right Arrow][/color]: Rotate Planet
+[color=777DA7][m][/color]: Mute/Unmute Audio
+[color=777DA7][f][/color]: Toggle fullscreen/windowed
+[color=777DA7][x][/color]: Quit the planetarium
+——————————
+[color=777DA7][h] or [?][/color]: Re-open this panel[/color]
+——————————
+Build 20 Jun 2023
+[/center]"
+fit_content = true
+scroll_active = false
+script = ExtResource("12_m3yun")
+
+[node name="ColorRect" type="ColorRect" parent="UI Root/help panel"]
+show_behind_parent = true
+layout_mode = 0
+offset_right = 1424.0
+offset_bottom = 804.0
+color = Color(0, 0, 0, 1)
+
 [node name="music" type="AudioStreamPlayer2D" parent="UI Root"]
 stream = ExtResource("11_bah0r")
 autoplay = true
 script = ExtResource("12_4xtgk")
-
-[node name="ColorRect" type="ColorRect" parent="UI Root"]
-z_index = -1
-material = SubResource("ShaderMaterial_mc8fc")
-offset_left = 3.0
-offset_right = 343.0
-offset_bottom = 200.0

@@ -1,5 +1,20 @@
 extends Object
-class_name ColorUtils
+class_name MathUtils
+
+func base_36_to_int(from: String):
+	var b36 = from.to_upper()
+	var b36digits = []
+	var b10 : int = 0
+	for char in b36:
+		if char.is_valid_int():
+			b36digits.append(int(char))
+		else:
+			b36digits.append(char.unicode_at(0) - 55)
+	print(b36digits)
+	b36digits.reverse()
+	for i in range(b36digits.size()):
+		b10 += b36digits[i] * pow(36, i)
+	return b10
 
 func random_color(rng: RandomNumberGenerator, normalized: bool = false):
 	var r = pow(rng.randf(), 3.0)

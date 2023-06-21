@@ -29,14 +29,13 @@ var namesfile_data
 var flavorfile_data
 
 var rng = RandomNumberGenerator.new()
-var colorutils = ColorUtils.new()
+var mathutils = MathUtils.new()
 
 func _ready():
 	rng.seed = 0
 	load_namesfile()
 	load_flavorfile()
 	generate(0)
-	generate_text()
 
 func _process(delta):
 	rotate(Vector3(0.0, 1.0, 0.0), rotation_speed * delta)
@@ -50,7 +49,7 @@ func _process(delta):
 
 func generate(seed: int = -1, planet_type: int = -1, planet_temp: int = -1):
 	if seed == -1:
-		rng.seed = rng.randi()
+		rng.seed = randi()
 	elif seed < -1:
 		rng.seed = abs(seed)
 	else:
@@ -122,16 +121,17 @@ func generate(seed: int = -1, planet_type: int = -1, planet_temp: int = -1):
 					generate_gg()
 				TEMP.VERY_COLD:
 					generate_gg()
+	generate_text()
 
 func generate_selena():
 	clouds.visible = false
 	atmosphere.visible = false
 	aurora.visible = false
-	set_instance_shader_parameter("color0", colorutils.random_white(rng, 0.0, 0.1))
-	set_instance_shader_parameter("color1", colorutils.random_white(rng, 0.0, 0.15))
-	set_instance_shader_parameter("color1", colorutils.random_white(rng, 0.0, 0.25))
-	set_instance_shader_parameter("color1", colorutils.random_white(rng, 0.0, 0.5))
-	set_instance_shader_parameter("color1", colorutils.random_white(rng, 0.0, 1.0))
+	set_instance_shader_parameter("color0", mathutils.random_white(rng, 0.0, 0.1))
+	set_instance_shader_parameter("color1", mathutils.random_white(rng, 0.0, 0.15))
+	set_instance_shader_parameter("color1", mathutils.random_white(rng, 0.0, 0.25))
+	set_instance_shader_parameter("color1", mathutils.random_white(rng, 0.0, 0.5))
+	set_instance_shader_parameter("color1", mathutils.random_white(rng, 0.0, 1.0))
 	set_instance_shader_parameter("noise_mult", randf_range(0.2, 0.6))
 	set_instance_shader_parameter("crater_mult", randf_range(0.8, 2.0))
 	set_instance_shader_parameter("poles_mult", 0.0)
@@ -142,26 +142,26 @@ func generate_terra(temperature : int = 2):
 	clouds.visible = true
 	atmosphere.visible = true
 	aurora.visible = true
-	set_instance_shader_parameter("color0", colorutils.random_blue(rng, 2.0, 0.5))
-	set_instance_shader_parameter("color1", colorutils.random_blue(rng, 1.0, 1.2))
-	set_instance_shader_parameter("color2", colorutils.random_green(rng))
-	set_instance_shader_parameter("color3", colorutils.random_green(rng))
-	set_instance_shader_parameter("color4", colorutils.random_white(rng))
+	set_instance_shader_parameter("color0", mathutils.random_blue(rng, 2.0, 0.5))
+	set_instance_shader_parameter("color1", mathutils.random_blue(rng, 1.0, 1.2))
+	set_instance_shader_parameter("color2", mathutils.random_green(rng))
+	set_instance_shader_parameter("color3", mathutils.random_green(rng))
+	set_instance_shader_parameter("color4", mathutils.random_white(rng))
 	match temperature:
 		TEMP.VERY_HOT, TEMP.HOT:
-			set_instance_shader_parameter("color0", colorutils.random_red(rng, 2.0, 0.5))
-			set_instance_shader_parameter("color1", colorutils.random_red(rng, 1.0, 1.2))
-			set_instance_shader_parameter("color2", colorutils.random_red(rng))
-			set_instance_shader_parameter("color3", colorutils.random_red(rng))
-			set_instance_shader_parameter("color4", colorutils.random_red(rng))
+			set_instance_shader_parameter("color0", mathutils.random_red(rng, 2.0, 0.5))
+			set_instance_shader_parameter("color1", mathutils.random_red(rng, 1.0, 1.2))
+			set_instance_shader_parameter("color2", mathutils.random_red(rng))
+			set_instance_shader_parameter("color3", mathutils.random_red(rng))
+			set_instance_shader_parameter("color4", mathutils.random_red(rng))
 			set_instance_shader_parameter("poles_mult", 0.0)
 		TEMP.COLD:
 			set_instance_shader_parameter("poles_mult", 2.0)
 		TEMP.VERY_COLD:
-			set_instance_shader_parameter("color0", colorutils.random_white(rng, 2.0, 0.5))
-			set_instance_shader_parameter("color1", colorutils.random_white(rng, 1.0, 1.2))
-			set_instance_shader_parameter("color2", colorutils.random_white(rng))
-			set_instance_shader_parameter("color3", colorutils.random_white(rng))
+			set_instance_shader_parameter("color0", mathutils.random_white(rng, 2.0, 0.5))
+			set_instance_shader_parameter("color1", mathutils.random_white(rng, 1.0, 1.2))
+			set_instance_shader_parameter("color2", mathutils.random_white(rng))
+			set_instance_shader_parameter("color3", mathutils.random_white(rng))
 			set_instance_shader_parameter("poles_mult", 5.0)
 	set_instance_shader_parameter("noise_mult", rng.randf_range(0.2, 2.0))
 	set_instance_shader_parameter("crater_mult", rng.randf_range(0.2, 2.0))
@@ -172,12 +172,12 @@ func generate_gg():
 	clouds.visible = false
 	atmosphere.visible = true
 	aurora.visible = true
-	var c = colorutils.random_color(rng, true)
+	var c = mathutils.random_color(rng, true)
 	set_instance_shader_parameter("color0", c)
-	set_instance_shader_parameter("color1", colorutils.mutate_color(rng, c, .1, .1, .1))
-	set_instance_shader_parameter("color2", colorutils.mutate_color(rng, c, .2, .2, .2))
-	set_instance_shader_parameter("color3", colorutils.mutate_color(rng, c, .3, .3, .3))
-	set_instance_shader_parameter("color4", colorutils.mutate_color(rng, c, .4, .4, .4))
+	set_instance_shader_parameter("color1", mathutils.mutate_color(rng, c, .1, .1, .1))
+	set_instance_shader_parameter("color2", mathutils.mutate_color(rng, c, .2, .2, .2))
+	set_instance_shader_parameter("color3", mathutils.mutate_color(rng, c, .3, .3, .3))
+	set_instance_shader_parameter("color4", mathutils.mutate_color(rng, c, .4, .4, .4))
 	set_instance_shader_parameter("noise_mult", rng.randf_range(0.2, 2.0))
 	set_instance_shader_parameter("crater_mult", 0.0)
 	set_instance_shader_parameter("poles_mult", 0.0)
@@ -200,7 +200,7 @@ func generate_text():
 	if rng.randf() < 0.75:
 		nm += " " + pick_seed_random(namesfile_data.names)
 	nm += " " + pick_seed_random(namesfile_data.numbers)
-	nm += "\n[color=B3B3B3]" + String.num_int64(rng.seed, 32, true) + "[/color]"
+	nm += "\n[color=B3B3B3]" + String.num_int64(rng.seed, 36, true) + "[/color]"
 	nm += "\n——————————"
 	
 	var tm = ""
@@ -307,4 +307,3 @@ func randomize_noise():
 	base_noise_tex.noise = base_noise
 	craters_tex.noise = craters
 	stripes_tex.noise = base_noise
-
